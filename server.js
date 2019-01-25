@@ -1,6 +1,18 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const mongoose = require('mongoose');
+
+require('dotenv').config();
+
+// connect to database
+mongoose.Promise = global.Promise;
+mongoose
+  .connect(
+    process.env.MONGODB_URI,
+    { useNewUrlParser: true }
+  )
+  .catch(err => console.log(`Error: ${err.message}`));
 
 const port = process.env.PORT || 3000;
 const app = express();
