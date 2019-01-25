@@ -1,0 +1,153 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+html {
+  font-size: 62.5%;
+  box-sizing: border-box;
+}
+
+body {
+  font-size: 1.6rem;
+  color: #777;
+  font-family: 'Roboto Slab', serif;
+}
+
+.title {
+  text-align: center;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2rem 0 8rem 0;
+  background: #21b2a6;
+  color: #fff;
+  text-shadow: 0 5px 6px rgba(0, 0, 0, 0.5);
+  font-size: 3.5rem;
+}
+
+.container {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.content {
+  max-width: 72rem;
+  margin: 5rem auto;
+  padding: 4rem;
+  padding-top: 2rem;
+  position: relative;
+  top: -8.5rem;
+  background: #fff;
+  box-shadow: 0 0.5rem 5rem rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+}
+
+h3 {
+  text-transform: uppercase;
+  font-weight: lighter;
+  border-bottom: 2px solid #21b2a6;
+  display: inline-block;
+  padding-bottom: 0.5rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+section {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+code {
+  font-size: 1.7rem;
+  word-break: break-all;
+}
+
+p {
+  margin: 1rem auto;
+}
+
+a {
+  color: #21b2a6;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+a:hover {
+  border-bottom: 1px solid #21b2a6;
+}
+
+.user-stories li {
+  line-height: 1.45;
+  margin-bottom: 0.3rem;
+}
+
+.url-creation form {
+  padding: 1rem;
+  text-align: center;
+  margin: 1rem 0 0.5rem 0;
+  background: #f7f7f7;
+}
+
+.url-creation label {
+  font-size: 1.4rem;
+}
+
+.url-creation input {
+  padding: 0.5rem;
+  font-family: inherit;
+  border: 1px solid transparent;
+  font-size: 1.3rem;
+  border-radius: 3px;
+  color: inherit;
+}
+
+input[type='text'] {
+  width: 70%;
+  background: #fff;
+  border: 1px solid #21b2a6;
+}
+
+input[type='submit'] {
+  background: #28b485;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.usage p {
+  text-align: center;
+}
+
+.footer {
+  text-align: center;
+  margin-top: -10rem;
+  font-size: 1.4rem;
+}
+
+@media screen and (max-width: 620px) {
+  html {
+    font-size: 60%;
+  }
+}
+
+@media screen and (max-width: 580px) {
+  html {
+    font-size: 58.5%;
+  }
+
+  .content {
+    padding: 2.3rem;
+    padding-left: 2.5rem;
+  }
+
+  input[type='text'] {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+}
