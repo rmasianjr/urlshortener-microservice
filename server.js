@@ -57,6 +57,21 @@ app.post('/api/shorturl/new', validateURL, checkStoredURLs, (req, res) => {
     .catch(err => res.json({ error: err.message }));
 });
 
+app.get('/api/shorturl/:url', (req, res) => {
+  const { url } = req.params;
+
+  Link.findOne({ short_url: Number(url) })
+    .then(doc => {
+      if (doc) {
+        const { original_url } = doc;
+        res.redirect(original_url);
+      } else {
+        throw new Error('No short url found for given input');
+      }
+    })
+    .catch(err => res.json({ error: err.message }));
+});
+
 app.use((req, res) => {
   res.status(404);
   res.json({ error: 'Not Found' });

@@ -6,7 +6,6 @@ module.exports = (req, res, next) => {
   Link.findOne({ original_url: cleanURL })
     .then(doc => {
       if (doc) {
-        console.log('already stored');
         const { original_url, short_url } = doc;
         return res.json({ original_url, short_url });
       } else {
