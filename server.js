@@ -7,6 +7,7 @@ const dns = require('dns');
 const { promisify } = require('util');
 
 const Link = require('./models/Link');
+const validateURL = require('./middleware/validateURL');
 
 require('dotenv').config();
 
@@ -14,7 +15,7 @@ require('dotenv').config();
 mongoose.Promise = global.Promise;
 mongoose
   .connect(
-    process.env.MONGODB_URI,
+    process.env.MONGODB_TEST,
     { useNewUrlParser: true }
   )
   .catch(err => console.log(`Error: ${err.message}`));
@@ -30,30 +31,22 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'views/index.html'));
 });
 
-app.post('/api/shorturl/new', (req, res) => {
-  const { url } = req.body;
+app.post('/api/shorturl/new', validateURL, (req, res) => {
+  const { cleanURL, hostName } = req;
   const lookupPromise = promisify(dns.lookup);
-  const pattern = /^(?:https?:\/\/)(?:www\.)([^\/]+)/;
 
-  if (!pattern.test(url)) return res.json({ error: 'invalid URL' });
-
-  const hostName = url.match(pattern)[1];
-
-  function checkHostName() {
-    return lookupPromise(hostName).catch(err =>
-      Promise.reject(new Error('invalid HostName'))
-    );
+  function checkHostName(host) {
+    return lookupPromise(host).catch(err => {
+      throw new Error('invalid HostName');
+    });
   }
 
-  checkHostName()
+  checkHostName(hostName)
     .then(() => {
       return Link.countDocuments({});
     })
     .then(count => {
-      const link = new Link({
-        original_url: url,
-        short_url: count + 1
-      });
+      const link = new Link({ original_url: cleanURL, short_url: count + 1 });
       return link.save();
     })
     .then(doc => {
