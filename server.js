@@ -8,6 +8,7 @@ const { promisify } = require('util');
 
 const Link = require('./models/Link');
 const validateURL = require('./middleware/validateURL');
+const checkStoredURLs = require('./middleware/checkStoredURLs');
 
 require('dotenv').config();
 
@@ -31,7 +32,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'views/index.html'));
 });
 
-app.post('/api/shorturl/new', validateURL, (req, res) => {
+app.post('/api/shorturl/new', validateURL, checkStoredURLs, (req, res) => {
   const { cleanURL, hostName } = req;
   const lookupPromise = promisify(dns.lookup);
 
