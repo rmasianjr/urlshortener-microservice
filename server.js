@@ -13,7 +13,7 @@ require('dotenv').config();
 mongoose.Promise = global.Promise;
 mongoose
   .connect(
-    process.env.MONGODB_TEST,
+    process.env.MONGODB_URI,
     { useNewUrlParser: true }
   )
   .catch(err => console.log(`Error: ${err.message}`));
