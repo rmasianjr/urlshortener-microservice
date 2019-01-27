@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
 const shorturl = require('./routes/shorturl');
+const { notFound, errors } = require('./middleware/handleErrors');
 
 require('dotenv').config();
 
@@ -30,15 +31,8 @@ app.get('/', (req, res) => {
 
 app.use('/api/shorturl', shorturl);
 
-app.use((req, res) => {
-  res.status(404);
-  res.json({ error: 'Not Found' });
-});
-
-app.use((err, req, res, next) => {
-  res.status(err.status || 500);
-  res.json({ error: err.message });
-});
+app.use(notFound);
+app.use(errors);
 
 app.listen(port, () => {
   console.log(`Server is up on port ${port}`);
