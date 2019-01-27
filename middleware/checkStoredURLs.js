@@ -1,16 +1,17 @@
 const Link = require('../models/Link');
 
-module.exports = (req, res, next) => {
-  const { cleanURL } = req;
+module.exports = async (req, res, next) => {
+  try {
+    const { cleanURL } = req;
 
-  Link.findOne({ original_url: cleanURL })
-    .then(doc => {
-      if (doc) {
-        const { original_url, short_url } = doc;
-        return res.json({ original_url, short_url });
-      } else {
-        next();
-      }
-    })
-    .catch(err => res.json({ error: err.message }));
+    const link = await Link.findOne({ original_url: cleanURL });
+    if (link) {
+      const { original_url, short_url } = link;
+      return res.json({ original_url, short_url });
+    }
+
+    next();
+  } catch (e) {
+    return res.json({ error: e.message });
+  }
 };

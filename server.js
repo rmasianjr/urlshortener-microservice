@@ -32,44 +32,34 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'views/index.html'));
 });
 
-app.post('/api/shorturl/new', validateURL, checkStoredURLs, (req, res) => {
-  const { cleanURL, hostName } = req;
-  const lookupPromise = promisify(dns.lookup);
+app.post('/api/shorturl/new', validateURL, checkStoredURLs, async (req, res) => {
+  try {
+    const { cleanURL, hostName } = req;
+    const lookupPromise = promisify(dns.lookup);
 
-  function checkHostName(host) {
-    return lookupPromise(host).catch(err => {
-      throw new Error('invalid HostName');
-    });
+    await lookupPromise(hostName).catch(err => { throw new Error('invalid HostName')});
+    const count = await Link.countDocuments({});
+    const link = new Link({ original_url: cleanURL, short_url: count + 1});
+    const { original_url, short_url } = await link.save();
+
+    res.json({ original_url, short_url });
+  } catch(e) {
+    res.json({ error: e.message });
   }
-
-  checkHostName(hostName)
-    .then(() => {
-      return Link.countDocuments({});
-    })
-    .then(count => {
-      const link = new Link({ original_url: cleanURL, short_url: count + 1 });
-      return link.save();
-    })
-    .then(doc => {
-      const { original_url, short_url } = doc;
-      res.json({ original_url, short_url });
-    })
-    .catch(err => res.json({ error: err.message }));
 });
 
-app.get('/api/shorturl/:url', (req, res) => {
-  const { url } = req.params;
+app.get('/api/shorturl/:url', async (req, res) => {
+  try {
+    const { url } = req.params;
+  
+    const link = await Link.findOne({ short_url: Number(url) });
+    if (!link) return res.json({ error: 'No short url found for given input' });
 
-  Link.findOne({ short_url: Number(url) })
-    .then(doc => {
-      if (doc) {
-        const { original_url } = doc;
-        res.redirect(original_url);
-      } else {
-        throw new Error('No short url found for given input');
-      }
-    })
-    .catch(err => res.json({ error: err.message }));
+    const { original_url } = link;
+    res.redirect(original_url);
+  } catch (e) {
+    res.json({ error: e.message });
+  } 
 });
 
 app.use((req, res) => {
